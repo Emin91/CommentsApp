@@ -1,0 +1,8 @@
+/android
+/ios
+
+# Expo
+.expo/
+web-build/
+
+/src/assets/*.json

@@ -1,3 +1,31 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
-}
+    "compilerOptions": {
+      "lib": [
+        "dom",
+        "esnext"
+      ],
+      "target": "es2018",
+      "module": "commonjs",
+      "jsx": "react-native",
+      "moduleResolution": "node",
+      "noEmit": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "alwaysStrict": true,
+      "importHelpers": true,
+      "noImplicitAny": true,
+      "noUnusedLocals": true,
+      "noImplicitThis": true,
+      "esModuleInterop": true,
+      "strictNullChecks": true,
+      "resolveJsonModule":true,
+      "noImplicitReturns": true,
+      "noUnusedParameters": true,
+      "strictFunctionTypes": true,
+      "noUncheckedIndexedAccess": true,
+      "noFallthroughCasesInSwitch": true,
+      "allowSyntheticDefaultImports": true,
+      "strictPropertyInitialization": true,
+      "forceConsistentCasingInFileNames": true
+    }
+  }

@@ -1,0 +1,134 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "jest": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": ["@typescript-eslint", "react"],
+    "rules": {
+        "semi": "warn", // точка с запятой
+        "quotes": [
+            "warn",
+            "double",
+            {"avoidEscape": true, "allowTemplateLiterals": true}
+        ], // только двойные кавычки
+        "indent": "off",
+        "@typescript-eslint/no-namespace": "off",
+        "@typescript-eslint/indent": ["warn"],
+        "react/display-name": ["off", {"ignoreTranspilerName": false}],
+        "no-empty-function": ["error", {"allow": ["arrowFunctions"]}],
+        "no-console": ["error", {"allow": ["warn", "error"]}], // удаляем консоль log
+        "no-var": "error",
+        "comma-dangle": [
+            "error",
+            {
+                "arrays": "never",
+                "objects": "never",
+                "imports": "never",
+                "exports": "never",
+                "functions": "never"
+            }
+        ], // последняя запятая
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-empty-interface": "off", // пустой интерфейс
+        "max-len": [
+            "error",
+            200,
+            {
+                "ignoreUrls": true,
+                "ignoreComments": true,
+                "ignoreTrailingComments": true,
+                "ignoreRegExpLiterals": true,
+                "ignoreTemplateLiterals": true,
+                "ignoreStrings": true
+            }
+        ], // максимальная длина строки
+        "space-before-function-paren": [
+            "warn",
+            {
+                // требовать или запрещать пробел перед открытием скобок функции
+                "anonymous": "always",
+                "named": "never",
+                "asyncArrow": "always"
+            }
+        ],
+        "no-mixed-spaces-and-tabs": ["error"],
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "no-trailing-spaces": "error", // пустые пробелы
+        "array-bracket-newline": ["error", "consistent"], // открывающие и закрывающие скобки с новой строки
+        "no-multiple-empty-lines": ["error", {"max": 1, "maxEOF": 1}], // удаляем пустые строки
+        "arrow-spacing": ["error", {"before": true, "after": true}], // () => {}
+        "semi-spacing": ["error", {"before": false, "after": true}], // устанавливает интервал перед точкой с запятой и запрещает интервал после точки с запятой
+        "no-unused-vars": [
+            "warn",
+            {"vars": "all", "args": "none", "ignoreRestSiblings": true}
+        ], // не используемая переменная
+        "@typescript-eslint/no-unused-vars": ["warn"], // не используемая переменная typescript
+        "no-extra-semi": "off", // лишние точка с запятой
+        "no-empty-pattern": "off", // лишние точка с запятой
+        "key-spacing": ["error", {"afterColon": true}], // пробел после двоеточие ключа в объекте, так же можно добавить beforeColon
+        "@typescript-eslint/no-extra-semi": ["warn"], // лишние точка с запятой
+        "comma-style": ["warn", "last"], // перенос запятой
+        "no-dupe-args": "error", // запрещает дублирование имен параметров в объявлениях функций или выражениях. Это не относится к функциям стрелок или методам класса
+        "no-dupe-else-if": "error", // это правило запрещает дублирование условий в одной
+        "no-dupe-keys": "error", // запрещает дублирование ключей в литералах объекта
+        "comma-spacing": ["error", {"before": false, "after": true}], // отступы перед и после запятых
+        "@typescript-eslint/no-empty-function": ["off"],
+        "for-direction": "error", // не позволяет установить бесконечный цикл for
+        "no-func-assign": "error", // запрещает переопределение ф-ций до их объявления
+        "no-template-curly-in-string": "error", // предупреждение, когда обычная строка содержит то, что выглядит как заполнитель литерала шаблона (""->``)
+        "no-unexpected-multiline": "error", // запрещает вводить в заблуждение многострочные выражения
+        "no-unreachable": "error", // запрещает недостижимый код после return, throw, continue и break
+        "valid-typeof": "error", // требует, чтобы typeof выражения сравнивались только со строковыми литералами или другими typeof выражениями, и запрещает сравнение с любым другим значением (error is strign or nunber)
+        "use-isnan": "error", // запрещает сравнение с «NaN» через ===. Только isNaN
+        "no-extra-boolean-cast": "error", // запрещает ненужные логические преобразования
+        "curly": "error", // предупреждает, когда if, else, for, while, или do используются без фигурных скобок
+        "no-eq-null": "error", // сравнения с null
+        "no-implicit-coercion": "error", // предназначено для обозначения более коротких и понятных обозначений для преобразования типов (Boolean, Number, String)
+        "no-multi-spaces": "error", // запрещает множественные пробелы вокруг логических выражений, условных выражений, объявлений, элементов массива, свойств объекта, последовательностей и параметров функций
+        "no-new-wrappers": "error", // устранение использования String, Number и Boolean с new оператором
+        "no-useless-return": "error", // направлено на то, чтобы сообщать о лишних return утверждениях
+        "require-await": "error", // предупреждает асинхронные функции, которые не имеют await выражения
+        // "no-use-before-define": ["error", {"allowNamedExports": false }], // предупредит, когда встретит ссылку на идентификатор, который еще не был объявлен
+        "array-bracket-spacing": "warn", // применять интервалы внутри скобок массива
+        "block-spacing": "error", // запрещать или применять пробелы внутри однострочных блоков
+        "keyword-spacing": "error", // применять интервалы до и после ключевых слов
+        "new-cap": ["error", {"capIsNew": false}], // требуется заглавная буква для конструкторов
+        "no-lonely-if": "off", // запретить if как единственный оператор в блоке else
+        "no-whitespace-before-property": "error", // запретить пустое пространство перед свойствами
+        "no-unneeded-ternary": "error", // запретить использование троичных операторов, когда существует более простая альтернатива
+        "object-curly-spacing": ["error", "always", {"arraysInObjects": true}], // требовать или запрещать заполнение внутри фигурных скобок
+        "@typescript-eslint/ban-types": [
+            "error",
+            {
+                "types": {
+                    "Foo": "Don't use Foo because it is unsafe",
+                    "{}": false
+                },
+                "extendDefaults": true
+            }
+        ],
+        "no-fallthrough": "error" // устраняет case без break
+        // "no-nested-ternary": "error", // запретить вложенные троичные выражения (нужно будет использовать!)
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+  }
+  
