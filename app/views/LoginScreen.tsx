@@ -22,6 +22,10 @@ export const LoginScreen = ({ }) => {
         return { height };
     });
 
+    const onAuthorization = () => {
+        navigation.navigate("Comments");
+    };
+
     const onSignUp = () => {
         setIsSignIn(!isSignIn);
         progress.value = withTiming(!isSignIn ? 1 : 0, { duration: 300 });
@@ -58,7 +62,7 @@ export const LoginScreen = ({ }) => {
                         </Animated.View>
                     ))}
                 </Animated.View>
-                <MainButton buttonStyle={{ marginTop: 20 }} onPress={() => { }} title="Sign In" />
+                <MainButton buttonStyle={{ marginTop: 20 }} onPress={onAuthorization} title={!isSignIn ? "Sign In" : "Sign Up"} />
                 <MainButton buttonStyle={{ marginTop: 10 }} onPress={onSignUp} variant="simple" title={!isSignIn ? "Create new account" : "Already have an account"} />
             </TouchableOpacity>
         </ImageBackground>
