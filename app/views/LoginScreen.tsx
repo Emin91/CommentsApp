@@ -7,16 +7,19 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery, useRealm } from "@realm/react";
 import { AuthSchema } from "../db/schemas/auth";
+import { BSON } from "realm";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { TRootNavigator } from "../../App";
 
 export const LoginScreen = ({ }) => {
     const { top } = useSafeAreaInsets();
-    const navigation = useNavigation();
+    const navigation = useNavigation<NativeStackNavigationProp<TRootNavigator>>();
     const [userEmailOrUsername, setUserEmailOrUsername] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userName, setUserName] = useState("");
     const [userPassword, setUserPassword] = useState("");
     const [confirmUserPassword, setConfirmUserPassword] = useState("");
-    const [isSignIn, setIsSignIn] = useState(!true);
+    const [isSignIn, setIsSignIn] = useState(true);
     const [isReady, setIsReady] = useState(false);
     const [isEmailOrUsernameCorrect, setIsEmailOrUsernameCorrect] = useState(false);
     const [isEmailCorrect, setIsEmailCorrect] = useState(false);
@@ -69,32 +72,33 @@ export const LoginScreen = ({ }) => {
         setIsPasswordConfirmCorrect(result);
     };
 
-    const onSignIn = () => {
-        const storedUser = authorizationList.find((el) => [el.userEmail, el.userName].includes(userEmailOrUsername));
-        if (storedUser?.userPassword === userPassword) {
-            Alert.alert("Success", "You have successfully logged in!");
-            navigation.navigate("CommentsList");
-            return;
-
-        }
-        Alert.alert("Sign in error", "The entered data is incorrect");
-    };
-
     const onCreateOrLogin = () => {
         setIsSignIn(!isSignIn);
     };
 
+    const onSignIn = () => {
+        const storedUser = authorizationList.find((el) => [el.userEmail, el.userName].includes(userEmailOrUsername));
+        if (storedUser?.userPassword === userPassword) {
+            Alert.alert("Success", "You have successfully logged in!");
+            const activeUserId = realm.objectForPrimaryKey("AuthSchema", new BSON.ObjectId(storedUser?._id));
+            navigation.navigate("CommentsList", { activeUserId: activeUserId?._id?.toHexString() });
+            return;
+        }
+        Alert.alert("Sign in error", "The entered data is incorrect");
+    };
+
     const onSignUp = () => {
-        const storedUser = authorizationList.find((el) => el.userEmail === userEmail || el.userName === userName);
-        if (storedUser) {
+        const storedUser = authorizationList.filtered(`userEmail == '${userEmail}' || userName == '${userName}'`);
+        if (storedUser?.length) {
             Alert.alert("Sign up error", "You are already registered in the system. Use the data for authorization");
             return;
         }
         realm.write(() => {
             realm.create(AuthSchema, { userEmail, userName, userPassword });
-            Alert.alert("Success", "You have registered successfully!");
-            navigation.navigate("CommentsList");
         });
+        Alert.alert("Success", "You have registered successfully!");
+        const activeUserId = realm.objectForPrimaryKey("AuthSchema", new BSON.ObjectId(storedUser?.[0]._id));
+        navigation.navigate("CommentsList", { activeUserId: activeUserId?._id?.toHexString() });
     };
 
     const inputs = [
