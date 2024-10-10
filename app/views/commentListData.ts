@@ -1,11 +1,11 @@
-interface Comment {
+export interface IComment {
     id: string;
     username: string;
     text: string;
     replies: Comment[];
 }
 
-export const MOCK_COMMENTS: Comment[] = [
+export const MOCK_COMMENTS: IComment[] = [
     {
         id: "1",
         username: "alex_travel",

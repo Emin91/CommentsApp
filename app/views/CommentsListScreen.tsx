@@ -1,26 +1,40 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { CommentComponent } from "../components/CommentComponent";
-import { MOCK_COMMENTS } from "./commentListData";
+import { IComment } from "./commentListData";
 import { COLORS } from "../config";
 import { AddCommentInput } from "../components/AddCommentInput";
+import { useQuery, useRealm } from "@realm/react";
+import { CommentSchema } from "../db/schemas/commentsList";
 
 export const CommentListScreen = ({ }) => {
     const styles = useMemo(() => getStyle(), []);
+    const realm = useRealm();
+    const comments = useQuery(CommentSchema);
+    const [commentsList, setCommentsList] = useState(comments || []);
 
-    const onSendComment = (comment: string) => {
-        console.log(comment);
+    const onSendComment = async (comment: string) => {
+        const id = new Date().toISOString();
+        const newComment: IComment = {
+            id,
+            username: "Emin",
+            text: comment,
+            replies: []
+        };
+        realm.write(() => {
+            realm.create(CommentSchema.name, newComment);
+        });
     };
 
     return (
         <Fragment>
             <View style={styles.container}>
                 <FlatList
-                    data={MOCK_COMMENTS}
-                    keyExtractor={(comment) => comment.id}
+                    data={commentsList}
+                    keyExtractor={(comment) => comment._id?.toString()}
                     contentContainerStyle={styles.listStyle}
                     renderItem={(({ item, index }) => (
-                        <CommentComponent key={index} {...{ item, arr: MOCK_COMMENTS }} isShowReplies={!false} />
+                        <CommentComponent key={index} item={item} isShowReplies={!false} />
                     ))}
                 />
             </View>
