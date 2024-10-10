@@ -8,6 +8,10 @@ import { SCHEMAS } from "./app/db/db";
 
 const Stack = createStackNavigator();
 
+export type TRootNavigator = {
+    "CommentsList": { activeUserId: string }
+}
+
 function App(): React.JSX.Element {
 
     return (

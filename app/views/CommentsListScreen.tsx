@@ -6,14 +6,17 @@ import { COLORS } from "../config";
 import { AddCommentInput } from "../components/AddCommentInput";
 import { useQuery, useRealm } from "@realm/react";
 import { CommentSchema } from "../db/schemas/commentsList";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { TRootNavigator } from "../../App";
 
 export const CommentListScreen = ({ }) => {
     const styles = useMemo(() => getStyle(), []);
+    const { params: { activeUserId } } = useRoute<RouteProp<TRootNavigator, "CommentsList">>();
     const realm = useRealm();
     const comments = useQuery(CommentSchema);
     const [commentsList, setCommentsList] = useState(comments || []);
 
-    const onSendComment = async (comment: string) => {
+    const onSendComment = (comment: string) => {
         const id = new Date().toISOString();
         const newComment: IComment = {
             id,
