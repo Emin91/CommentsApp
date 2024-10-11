@@ -1,10 +1,9 @@
-import { Realm } from "@realm/react";
-import { BSON, Object, Types } from "realm";
+import { BSON, Object } from "realm";
 
 export class CommentSchema extends Object {
-    public _id: Realm.BSON.ObjectId = new BSON.ObjectID();
-    public id!: string;
+    public static primaryKey = "_id";
+    public _id: BSON.ObjectId = new BSON.ObjectId();
     public username!: string;
     public text!: string;
-    public replies!: Types.List<string>;
+    public replies: Realm.List<CommentSchema> = new Realm.List();
 }

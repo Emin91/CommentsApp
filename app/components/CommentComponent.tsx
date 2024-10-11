@@ -1,24 +1,23 @@
 import React, { FC, useState } from "react";
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from "react-native";
 import { COLORS, FONTS } from "../config";
-
-interface Comment {
-    id: string;
-    username: string;
-    text: string;
-    replies: Comment[];
-}
+import { IComment } from "../views/commentListData";
 
 interface Props {
-    item: Comment
+    item: IComment
     isShowReplies?: boolean
     isReply?: boolean
-    parentComment?: Comment
+    parentComment?: IComment
+    onPressReply: (item: IComment) => void
 }
 
-export const CommentComponent: FC<Props> = ({ item, isShowReplies, isReply, parentComment }) => {
+export const CommentComponent: FC<Props> = ({ item, isShowReplies, isReply, parentComment, onPressReply }) => {
     const [isExpand, setIsExpand] = useState(false);
     const styles = getStyle(isExpand, isReply);
+
+    const onPressReplyHandler = () => {
+        onPressReply?.(item);
+    };
 
     return (
         <View style={styles.container}>
@@ -42,7 +41,7 @@ export const CommentComponent: FC<Props> = ({ item, isShowReplies, isReply, pare
             ) : null}
             <View style={{ padding: 10 }}>
                 <Text style={styles.comment}>{item.text}</Text>
-                <TouchableOpacity style={styles.replyButton}>
+                <TouchableOpacity onPress={onPressReplyHandler} style={styles.replyButton}>
                     <Text style={styles.reply}>
                         <Text>{item?.replies?.length ? `[${item?.replies?.length}] ` : ""}</Text>
                         Reply
@@ -52,9 +51,9 @@ export const CommentComponent: FC<Props> = ({ item, isShowReplies, isReply, pare
             {isShowReplies && isExpand && <FlatList
                 data={item.replies}
                 style={styles.replyList}
-                keyExtractor={(reply) => reply.id}
+                keyExtractor={(reply) => reply.id!}
                 renderItem={(({ item: replyItem }) => (
-                    <CommentComponent item={replyItem} parentComment={item} isShowReplies isReply />
+                    <CommentComponent item={replyItem} parentComment={item} isShowReplies isReply onPressReply={onPressReply} />
                 ))}
             />}
         </View>
