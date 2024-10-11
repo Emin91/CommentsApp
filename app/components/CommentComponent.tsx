@@ -2,6 +2,7 @@ import React, { FC, useState } from "react";
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from "react-native";
 import { COLORS, FONTS } from "../config";
 import { IComment } from "../views/commentListData";
+import Animated, { FadeInDown, LinearTransition } from "react-native-reanimated";
 
 interface Props {
     item: IComment
@@ -20,7 +21,7 @@ export const CommentComponent: FC<Props> = ({ item, isShowReplies, isReply, pare
     };
 
     return (
-        <View style={styles.container}>
+        <Animated.View layout={LinearTransition.stiffness(300)} entering={FadeInDown.duration(400)} style={styles.container}>
             {isReply && <View style={styles.verticalLine} />}
             <View style={styles.header}>
                 <View style={styles.headerLeft}>
@@ -56,7 +57,7 @@ export const CommentComponent: FC<Props> = ({ item, isShowReplies, isReply, pare
                     <CommentComponent item={replyItem} parentComment={item} isShowReplies isReply onPressReply={onPressReply} />
                 ))}
             />}
-        </View>
+        </Animated.View>
     );
 };
 

@@ -1,8 +1,8 @@
 import React, { Fragment, useMemo, useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, Text } from "react-native";
 import { CommentComponent } from "../components/CommentComponent";
 import { IComment } from "./commentListData";
-import { COLORS } from "../config";
+import { COLORS, FONTS } from "../config";
 import { AddCommentInput } from "../components/AddCommentInput";
 import { useRealm } from "@realm/react";
 import { RouteProp, useRoute } from "@react-navigation/native";
@@ -38,7 +38,6 @@ export const CommentListScreen = ({ }) => {
 
     const onSendComment = (comment: string) => {
         const newComment: IComment = {
-            id: Date.now().toString(),
             username: activeUser?.userName || "Anonymous",
             text: comment,
             replies: []
@@ -54,6 +53,7 @@ export const CommentListScreen = ({ }) => {
         } else {
             setCommentsList([...commentsList, newComment]);
         }
+
     };
 
     const onCancelReply = () => {
@@ -71,6 +71,7 @@ export const CommentListScreen = ({ }) => {
                     data={commentsList}
                     contentContainerStyle={styles.listStyle}
                     keyExtractor={(el) => el.id!}
+                    ListEmptyComponent={() => <Text style={styles.emptyLabel}>List is empty</Text>}
                     renderItem={(({ item, index }) => (
                         <CommentComponent key={index} item={item} isShowReplies={!false} onPressReply={onPressReply} />
                     ))}
@@ -91,6 +92,13 @@ export const getStyle = () => {
         listStyle: {
             paddingTop: 12,
             paddingBottom: 100
+        },
+        emptyLabel: {
+            marginTop: 20,
+            alignSelf: "center",
+            fontSize: 16,
+            color: COLORS.blue,
+            fontFamily: FONTS.Poppins_SemiBold
         }
     });
 };
