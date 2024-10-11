@@ -96,7 +96,7 @@ export const LoginScreen = ({ }) => {
         realm.write(() => {
             realm.create(AuthSchema, { userEmail, userName, userPassword });
         });
-        Alert.alert("Success", "You have registered successfully!");
+        //Alert.alert("Success", "You have registered successfully!");
         const activeUserId = realm.objectForPrimaryKey("AuthSchema", new BSON.ObjectId(storedUser?.[0]._id));
         navigation.navigate("CommentsList", { activeUserId: activeUserId?._id?.toHexString() });
     };
@@ -156,6 +156,8 @@ export const LoginScreen = ({ }) => {
             onChangeMailOrUsername(userEmail);
         }
     }, [isSignIn, userEmail, userEmailOrUsername]);
+
+    //console.log(authorizationList);
 
     return (
         <ImageBackground style={styles.container} source={IMAGES.background}>

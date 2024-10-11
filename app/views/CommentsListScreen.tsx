@@ -4,29 +4,64 @@ import { CommentComponent } from "../components/CommentComponent";
 import { IComment } from "./commentListData";
 import { COLORS } from "../config";
 import { AddCommentInput } from "../components/AddCommentInput";
-import { useQuery, useRealm } from "@realm/react";
-import { CommentSchema } from "../db/schemas/commentsList";
+import { useRealm } from "@realm/react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { TRootNavigator } from "../../App";
+import { BSON } from "realm";
+import { AuthSchema } from "../db/schemas/auth";
 
 export const CommentListScreen = ({ }) => {
     const styles = useMemo(() => getStyle(), []);
-    const { params: { activeUserId } } = useRoute<RouteProp<TRootNavigator, "CommentsList">>();
     const realm = useRealm();
-    const comments = useQuery(CommentSchema);
-    const [commentsList, setCommentsList] = useState(comments || []);
+    const { params: { activeUserId } } = useRoute<RouteProp<TRootNavigator, "CommentsList">>();
+    const [commentsList, setCommentsList] = useState<IComment[]>([]);
+    const [selectedComment, setSelectedComment] = useState<IComment | null>(null);
+    const activeUser = realm.objectForPrimaryKey(AuthSchema, new BSON.ObjectId(activeUserId));
+
+    const updateCommentReplies = (comment: IComment, selectedId: string, newReply: IComment): IComment => {
+        if (comment.id === selectedId) {
+            return {
+                ...comment,
+                replies: [...(comment.replies || []), newReply]
+            };
+        }
+
+        if (comment.replies && comment.replies.length > 0) {
+            return {
+                ...comment,
+                replies: comment.replies.map(reply => updateCommentReplies(reply, selectedId, newReply))
+            };
+        }
+
+        return comment;
+    };
 
     const onSendComment = (comment: string) => {
-        const id = new Date().toISOString();
         const newComment: IComment = {
-            id,
-            username: "Emin",
+            id: Date.now().toString(),
+            username: activeUser?.userName || "Anonymous",
             text: comment,
             replies: []
         };
-        realm.write(() => {
-            realm.create(CommentSchema.name, newComment);
-        });
+
+        if (selectedComment) {
+            const updatedCommentsList = commentsList.map(comment =>
+                updateCommentReplies(comment, selectedComment?.id, newComment)
+            );
+
+            setCommentsList(updatedCommentsList);
+            setSelectedComment(null);
+        } else {
+            setCommentsList([...commentsList, newComment]);
+        }
+    };
+
+    const onCancelReply = () => {
+        setSelectedComment(null);
+    };
+
+    const onPressReply = (selectedComment: IComment) => {
+        setSelectedComment(selectedComment);
     };
 
     return (
@@ -34,14 +69,14 @@ export const CommentListScreen = ({ }) => {
             <View style={styles.container}>
                 <FlatList
                     data={commentsList}
-                    keyExtractor={(comment) => comment._id?.toString()}
                     contentContainerStyle={styles.listStyle}
+                    keyExtractor={(el) => el.id!}
                     renderItem={(({ item, index }) => (
-                        <CommentComponent key={index} item={item} isShowReplies={!false} />
+                        <CommentComponent key={index} item={item} isShowReplies={!false} onPressReply={onPressReply} />
                     ))}
                 />
             </View>
-            <AddCommentInput onSendComment={onSendComment} />
+            <AddCommentInput onSendComment={onSendComment} selectedComment={selectedComment} {...{ onCancelReply }} />
         </Fragment>
     );
 };
@@ -55,7 +90,7 @@ export const getStyle = () => {
         },
         listStyle: {
             paddingTop: 12,
-            paddingBottom: 60
+            paddingBottom: 100
         }
     });
 };
