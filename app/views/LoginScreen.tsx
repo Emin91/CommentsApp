@@ -14,11 +14,11 @@ import { TRootNavigator } from "../../App";
 export const LoginScreen = ({ }) => {
     const { top } = useSafeAreaInsets();
     const navigation = useNavigation<NativeStackNavigationProp<TRootNavigator>>();
-    const [userEmailOrUsername, setUserEmailOrUsername] = useState("");
-    const [userEmail, setUserEmail] = useState("");
-    const [userName, setUserName] = useState("");
-    const [userPassword, setUserPassword] = useState("");
-    const [confirmUserPassword, setConfirmUserPassword] = useState("");
+    const [userEmailOrUsername, setUserEmailOrUsername] = useState("emin@mail.ru");
+    const [userEmail, setUserEmail] = useState("emin@mail.ru");
+    const [userName, setUserName] = useState("username1");
+    const [userPassword, setUserPassword] = useState("123123a");
+    const [confirmUserPassword, setConfirmUserPassword] = useState("123123a");
     const [isSignIn, setIsSignIn] = useState(true);
     const [isReady, setIsReady] = useState(false);
     const [isEmailOrUsernameCorrect, setIsEmailOrUsernameCorrect] = useState(false);
@@ -79,7 +79,6 @@ export const LoginScreen = ({ }) => {
     const onSignIn = () => {
         const storedUser = authorizationList.find((el) => [el.userEmail, el.userName].includes(userEmailOrUsername));
         if (storedUser?.userPassword === userPassword) {
-            Alert.alert("Success", "You have successfully logged in!");
             const activeUserId = realm.objectForPrimaryKey("AuthSchema", new BSON.ObjectId(storedUser?._id));
             navigation.navigate("CommentsList", { activeUserId: activeUserId?._id?.toHexString() });
             return;
@@ -96,7 +95,7 @@ export const LoginScreen = ({ }) => {
         realm.write(() => {
             realm.create(AuthSchema, { userEmail, userName, userPassword });
         });
-        //Alert.alert("Success", "You have registered successfully!");
+        Alert.alert("Success", "You have registered successfully!");
         const activeUserId = realm.objectForPrimaryKey("AuthSchema", new BSON.ObjectId(storedUser?.[0]._id));
         navigation.navigate("CommentsList", { activeUserId: activeUserId?._id?.toHexString() });
     };
@@ -156,8 +155,6 @@ export const LoginScreen = ({ }) => {
             onChangeMailOrUsername(userEmail);
         }
     }, [isSignIn, userEmail, userEmailOrUsername]);
-
-    //console.log(authorizationList);
 
     return (
         <ImageBackground style={styles.container} source={IMAGES.background}>

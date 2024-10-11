@@ -2,7 +2,7 @@ export interface IComment {
     id?: string;
     username: string;
     text: string;
-    replies?: IComment[];
+    replies?: IComment[] | [];
 }
 
 export const MOCK_COMMENTS: IComment[] = [
